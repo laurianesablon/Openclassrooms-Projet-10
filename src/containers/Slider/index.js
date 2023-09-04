@@ -1,4 +1,4 @@
-import { useEffect, useState , useMemo} from "react";
+import React, { useEffect, useState , useMemo} from "react";
 import { useData } from "../../contexts/DataContext";
 import { getMonth } from "../../helpers/Date";
 
@@ -31,7 +31,7 @@ const Slider = () => {
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
+        <React.Fragment key={`slide-${event.title}`}>
           <div
             key={event.date}
             className={`SlideCard SlideCard--${
@@ -59,7 +59,7 @@ const Slider = () => {
               ))}
             </div>
           </div>
-        </>
+        </React.Fragment>
       ))}
     </div>
   );
