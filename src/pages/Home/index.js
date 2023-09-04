@@ -12,13 +12,10 @@ import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
-
 const Page = () => {
-  const {data} = useData()
-  const last = data.events[data.events.length - 1]
-  return (
-
-  <>
+  const {data} = useData();
+  const last = data?.events[data.events.length - 1];  
+  return (<>
     <header>
       <Menu />
     </header>
@@ -120,7 +117,6 @@ const Page = () => {
     <footer className="row">
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
-       
         <EventCard
           imageSrc={last?.cover}
           title={last?.title}
@@ -159,8 +155,7 @@ const Page = () => {
         </p>
       </div>
     </footer>
-  </>
-  )
+  </>)
 }
 
 export default Page;
