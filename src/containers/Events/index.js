@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EventCard from "../../components/EventCard";
 import Select from "../../components/Select";
 import { useData } from "../../contexts/DataContext";
@@ -13,19 +13,27 @@ const EventList = () => {
   const { data, error } = useData();
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const filteredEvents = data?.events
-  .filter((event) => !type || event.type === type)
-  .filter((event, index) => {
-    if ((currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index) {
-      return true;
+  const [filteredEvents, setFilteredEvents] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      const filterEvents = data.events
+        .filter((event) => !type || event.type === type)
+        .filter(
+          (event, index) =>
+            (currentPage - 1) * PER_PAGE <= index &&
+            PER_PAGE * currentPage > index
+        );
+      setFilteredEvents(filterEvents);
     }
-    return false;
-  });
+  }, [data, type, currentPage]);
+
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
-  const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
+
+  const pageNumber = Math.floor((filteredEvents.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
   return (
     <>
@@ -40,7 +48,7 @@ const EventList = () => {
             onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
           <div id="events" className="ListContainer">
-            {filteredEvents.map((event) => (
+            {filteredEvents?.map((event) => (
               <Modal key={event.id} Content={<ModalEvent event={event} />}>
                 {({ setIsOpened }) => (
                   <EventCard
