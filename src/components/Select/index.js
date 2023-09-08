@@ -4,6 +4,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import "./style.scss";
+// TODO: click sur la li ne change pas le checked
 
 const Select = ({
   selection,
@@ -18,24 +19,30 @@ const Select = ({
   const changeValue = (newValue) => {
     onChange(newValue);
     setValue(newValue);
+    setCollapsed(true);
   };
+
   return (
     <div className={`SelectContainer ${type}`} data-testid="select-testid">
       {label && <div className="label">{label}</div>}
       <div className="Select">
         <ul>
+          {/* Show the current value or "Toutes" if value is empty */}
           <li className={collapsed ? "SelectTitle--show" : "SelectTitle--hide"}>
             {value || (!titleEmpty && "Toutes")}
           </li>
+          {/* Render the options if not collapsed */}
           {!collapsed && (
             <>
+              {/* Render "Toutes" option if titleEmpty is true */}
               {!titleEmpty && (
                 <li onClick={() => changeValue(null)}>
                   <input defaultChecked={!value} name="selected" type="radio" />{" "}
                   Toutes
                 </li>
               )}
-              {selection.map((s) => ( 
+              {/* Render selection options */}
+              {selection.map((s) => (
                 <li key={s} onClick={() => changeValue(s)}>
                   <input
                     defaultChecked={value === s}
@@ -48,7 +55,9 @@ const Select = ({
             </>
           )}
         </ul>
+        {/* Hidden input to send the selected value */}
         <input type="hidden" value={value || ""} name={name} />
+        {/* Button to toggle the collapsed state */}
         <button
           type="button"
           data-testid="collapse-button-testid"
